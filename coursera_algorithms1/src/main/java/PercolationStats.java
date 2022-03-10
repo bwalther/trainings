@@ -1,7 +1,6 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.Stopwatch;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class PercolationStats {
     final double[] stats;
@@ -13,13 +12,13 @@ public class PercolationStats {
         for (int i = 0; i < trials; i++) {
             Percolation percolation = new Percolation(n);
             while (!percolation.percolates()) {
-                Pair<Integer, Integer> randomSite = randomSite(n);
+                Percolation.Pair<Integer, Integer> randomSite = randomSite(n);
                 Stopwatch stopwatch = new Stopwatch();
-                while (percolation.isOpen(randomSite.getLeft(), randomSite.getRight())) {
+                while (percolation.isOpen(randomSite.left, randomSite.right)) {
                     randomSite = randomSite(n);
                 }
                 timeFindingOpen += stopwatch.elapsedTime();
-                percolation.open(randomSite.getLeft(), randomSite.getRight());
+                percolation.open(randomSite.left, randomSite.right);
             }
             double p = percolation.numberOfOpenSites() / (double) (n * n);
             stats[i] = p;
@@ -61,9 +60,10 @@ public class PercolationStats {
         System.out.println("Elapsed time (s):" + stopwatch.elapsedTime() + " (time finding open:)" + stats.timeFindingOpen);
     }
 
-    private static Pair<Integer, Integer> randomSite(int n) {
+    @SuppressWarnings({"rawtypes","unchecked"})
+    private static Percolation.Pair<Integer, Integer> randomSite(int n) {
         int idx = StdRandom.uniform(n * n);
-        return Pair.of(idx / n + 1, idx % n + 1);
+        return new Percolation.Pair(idx / n + 1, idx % n + 1);
     }
 
 }
