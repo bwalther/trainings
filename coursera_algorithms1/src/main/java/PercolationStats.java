@@ -3,16 +3,18 @@ import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class PercolationStats {
-    final double[] stats;
-    double timeFindingOpen = 0;
+    private final double[] stats;
+    private double timeFindingOpen = 0;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
+        if (trials <= 0) throw new IllegalArgumentException("invalid trials. Must be > 0");
+
         stats = new double[trials];
         for (int i = 0; i < trials; i++) {
             Percolation percolation = new Percolation(n);
             while (!percolation.percolates()) {
-                Percolation.Pair<Integer, Integer> randomSite = randomSite(n);
+                IntPair randomSite = randomSite(n);
                 Stopwatch stopwatch = new Stopwatch();
                 while (percolation.isOpen(randomSite.left, randomSite.right)) {
                     randomSite = randomSite(n);
@@ -60,10 +62,20 @@ public class PercolationStats {
         System.out.println("Elapsed time (s):" + stopwatch.elapsedTime() + " (time finding open:)" + stats.timeFindingOpen);
     }
 
-    @SuppressWarnings({"rawtypes","unchecked"})
-    private static Percolation.Pair<Integer, Integer> randomSite(int n) {
+    private static IntPair randomSite(int n) {
         int idx = StdRandom.uniform(n * n);
-        return new Percolation.Pair(idx / n + 1, idx % n + 1);
+        return new IntPair(idx / n + 1, idx % n + 1);
+    }
+
+    private static class IntPair {
+        Integer left;
+        Integer right;
+
+        IntPair(Integer pLeft, Integer pRight) {
+            left = pLeft;
+            right = pRight;
+        }
+
     }
 
 }

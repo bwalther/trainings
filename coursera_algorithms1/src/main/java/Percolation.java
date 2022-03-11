@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Percolation {
 
     private final int n;
@@ -17,38 +14,31 @@ public class Percolation {
     }
 
     // opens the site (row, col) if it is not open already
-    @SuppressWarnings({"rawtypes","unchecked"})
     public void open(int row, int col) {
-        Pair<Integer, Integer> rowCol = rangeCheck(row, col);
+        IntPair rowCol = rangeCheck(row, col);
         row = rowCol.left;
         col = rowCol.right;
         int idx = toIndex(row, col);
         if (!open[idx]) {
             open[idx] = true;
-            List<Pair<Integer, Integer>> unionCandidates = new ArrayList<>();
-            if (row > 0) {
-                unionCandidates.add(new Pair(row - 1, col));
+            if (row > 0 && isOpenInternal(row - 1, col)) {
+                weightedUnionFind.union(idx, toIndex(row - 1, col));
             }
-            if (row < n - 1) {
-                unionCandidates.add(new Pair(row + 1, col));
+            if (row < n - 1 && isOpenInternal(row + 1, col)) {
+                weightedUnionFind.union(idx, toIndex(row + 1, col));
             }
-            if (col > 0) {
-                unionCandidates.add(new Pair(row, col - 1));
+            if (col > 0 && isOpenInternal(row, col - 1)) {
+                weightedUnionFind.union(idx, toIndex(row, col - 1));
             }
-            if (col < n - 1) {
-                unionCandidates.add(new Pair(row, col + 1));
+            if (col < n - 1 && isOpenInternal(row, col + 1)) {
+                weightedUnionFind.union(idx, toIndex(row, col + 1));
             }
-            // union all connecting squares if they are open (check 9 pieces)
-            unionCandidates
-                    .stream()
-                    .filter(p -> isOpenInternal(p.left, p.right))
-                    .forEach(p -> weightedUnionFind.union(idx, toIndex(p.left, p.right)));
         }
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        Pair<Integer, Integer> rowCol = rangeCheck(row, col);
+        IntPair rowCol = rangeCheck(row, col);
         row = rowCol.left;
         col = rowCol.right;
         return isOpenInternal(row, col);
@@ -56,7 +46,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        Pair<Integer, Integer> rowCol = rangeCheck(row, col);
+        IntPair rowCol = rangeCheck(row, col);
         row = rowCol.left;
         col = rowCol.right;
         boolean full = false;
@@ -95,7 +85,14 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation percolation = new Percolation(5);
+
+        Percolation percolation = new Percolation(3);
+        percolation.open(1, 2);
+        percolation.open(2, 2);
+        percolation.open(3, 2);
+        System.out.printf("Should percolate: %s", percolation.percolates());
+
+        percolation = new Percolation(5);
         percolation.open(1, 2);
         percolation.open(2, 2);
         percolation.open(3, 2);
@@ -103,7 +100,8 @@ public class Percolation {
         percolation.open(4, 3);
         percolation.open(4, 4);
         percolation.open(5, 4);
-        System.out.printf("Should percolate: %s%n", percolation.percolates());
+        System.out.printf("Should percolate: %s", percolation.percolates());
+
     }
 
     private int toIndex(int row, int col) {
@@ -114,26 +112,25 @@ public class Percolation {
         return open[toIndex(row, col)];
     }
 
-    @SuppressWarnings({"rawtypes","unchecked"})
-    private Pair<Integer, Integer> rangeCheck(int row, int col) {
+    private IntPair rangeCheck(int row, int col) {
         if (row < 1 || col < 1 || row > n || col > n) {
             throw new IllegalArgumentException("invalid size. Must between 1 and " + n);
         }
-        return new Pair(row - 1, col - 1);
+        return new IntPair(row - 1, col - 1);
     }
 
-    public static class Pair<T, V> {
-        T left;
-        V right;
+    private static class IntPair {
+        Integer left;
+        Integer right;
 
-        Pair(T l, V r) {
-            left = l;
-            right = r;
+        IntPair(Integer pLeft, Integer pRight) {
+            left = pLeft;
+            right = pRight;
         }
 
     }
 
-    static class WeightedUnionFind {
+    private static class WeightedUnionFind {
 
         final int n;
         int[] parent;
