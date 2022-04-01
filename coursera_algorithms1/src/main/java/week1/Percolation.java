@@ -1,3 +1,5 @@
+package week1;
+
 public class Percolation {
 
     private final int n;
