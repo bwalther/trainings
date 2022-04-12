@@ -22,7 +22,7 @@ public class DecimalToBinary {
     }
 
     private static String decimalToBinaryStack(int n) {
-        //attention do not use Stack interface!!!!Java Stack class that causes stack elements to be printed in FIFO order instead of the expected LILO order.
+        //attention do not use Stack interface!!!!Java Stack class iteration causes stack elements to be printed in FIFO order instead of the expected LIFO order.
         /*
         All Deque implementations like ArrayDeque, LinkedList, etc., use “double ended queue,”
         which provides a more complete and consistent set of LIFO and FIFO operations.
