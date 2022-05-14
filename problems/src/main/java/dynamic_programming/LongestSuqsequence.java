@@ -1,4 +1,4 @@
-package strings;
+package dynamic_programming;
 
 public class LongestSuqsequence {
 

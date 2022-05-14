@@ -1,4 +1,4 @@
-package strings;
+package dynamic_programming;
 
 import java.util.ArrayList;
 import java.util.List;

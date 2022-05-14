@@ -1,4 +1,4 @@
-package strings;
+package dynamic_programming;
 
 public class LongestSubstring {
     public static int lengthOfLongestSubstring(String s) {

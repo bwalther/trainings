@@ -1,6 +1,8 @@
 package arrays;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,6 +32,9 @@ public class RotateArray {
     }
 
     public static void main(String[] args) {
+        // rotate left
+        System.out.println(rotLeft(List.of(1, 2, 3, 4, 5), 2));
+
         // rotate tmp array
         TestCase testCase = new TestCase("[1,2,3] 4 [3,1,2]");
         System.out.println("input:" + testCase.inputStr + " k:" + testCase.k + " expected:" + testCase.expected);
@@ -46,6 +51,19 @@ public class RotateArray {
         rotate_modulo(testCase.input, testCase.k);
         System.out.println("output:" + Arrays.stream(testCase.input).boxed().collect(Collectors.toList()));
     }
+
+    public static List<Integer> rotLeft(List<Integer> a, int d) {
+        // Write your code here
+        List<Integer> tmp = new ArrayList<>();
+        tmp.addAll(a);
+        int k = d % a.size();
+        for (int i = 0; i < a.size(); i++) {
+            tmp.set((a.size() - k + i) % a.size(), a.get(i));
+        }
+
+        return tmp;
+    }
+
 
     public static void rotate_tmpArray(int[] nums, int k) {
 
